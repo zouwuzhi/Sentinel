@@ -17,6 +17,7 @@ package com.alibaba.csp.sentinel.dashboard.repository.rule;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.ParamFlowRuleEntity;
 import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowClusterConfig;
 
@@ -33,7 +34,7 @@ public class InMemParamFlowRuleStore extends InMemoryRuleRepositoryAdapter<Param
 
     @Override
     protected long nextId() {
-        return ids.incrementAndGet();
+        return IdUtil.getSnowflakeNextId();
     }
 
     @Override

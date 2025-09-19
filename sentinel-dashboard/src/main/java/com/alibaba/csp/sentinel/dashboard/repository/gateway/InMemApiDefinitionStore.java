@@ -15,6 +15,7 @@
  */
 package com.alibaba.csp.sentinel.dashboard.repository.gateway;
 
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.gateway.ApiDefinitionEntity;
 import com.alibaba.csp.sentinel.dashboard.repository.rule.InMemoryRuleRepositoryAdapter;
 import org.springframework.stereotype.Component;
@@ -34,6 +35,6 @@ public class InMemApiDefinitionStore extends InMemoryRuleRepositoryAdapter<ApiDe
 
     @Override
     protected long nextId() {
-        return ids.incrementAndGet();
+        return IdUtil.getSnowflakeNextId();
     }
 }

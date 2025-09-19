@@ -17,6 +17,7 @@ package com.alibaba.csp.sentinel.dashboard.repository.rule;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.DegradeRuleEntity;
 
 import org.springframework.stereotype.Component;
@@ -31,6 +32,6 @@ public class InMemDegradeRuleStore extends InMemoryRuleRepositoryAdapter<Degrade
 
     @Override
     protected long nextId() {
-        return ids.incrementAndGet();
+        return IdUtil.getSnowflakeNextId();
     }
 }
