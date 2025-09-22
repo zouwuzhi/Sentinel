@@ -76,10 +76,10 @@ public class ParamFlowRuleController {
     private boolean checkIfSupported(String app, String ip, int port) {
         try {
             return Optional.ofNullable(appManagement.getDetailApp(app))
-                .flatMap(e -> e.getMachine(ip, port))
-                .flatMap(m -> VersionUtils.parseVersion(m.getVersion())
-                    .map(v -> v.greaterOrEqual(version020)))
-                .orElse(true);
+                    .flatMap(e -> e.getMachine(ip, port))
+                    .flatMap(m -> VersionUtils.parseVersion(m.getVersion())
+                            .map(v -> v.greaterOrEqual(version020)))
+                    .orElse(true);
             // If error occurred or cannot retrieve machine info, return true.
         } catch (Exception ex) {
             return true;
@@ -137,18 +137,15 @@ public class ParamFlowRuleController {
         entity.setGmtModified(date);
         try {
             entity = repository.save(entity);
-            publishRules(entity.getApp(), entity.getIp(), entity.getPort()).get();
+            publishRules(entity.getApp(), entity.getIp(), entity.getPort());
             return Result.ofSuccess(entity);
-        } catch (ExecutionException ex) {
+        } catch (Throwable ex) {
             logger.error("Error when adding new parameter flow rules", ex.getCause());
             if (isNotSupported(ex.getCause())) {
                 return unsupportedVersion();
             } else {
                 return Result.ofThrowable(-1, ex.getCause());
             }
-        } catch (Throwable throwable) {
-            logger.error("Error when adding new parameter flow rules", throwable);
-            return Result.ofFail(-1, throwable.getMessage());
         }
     }
 
@@ -214,18 +211,15 @@ public class ParamFlowRuleController {
         entity.setGmtModified(date);
         try {
             entity = repository.save(entity);
-            publishRules(entity.getApp(), entity.getIp(), entity.getPort()).get();
+            publishRules(entity.getApp(), entity.getIp(), entity.getPort());
             return Result.ofSuccess(entity);
-        } catch (ExecutionException ex) {
+        } catch (Throwable ex) {
             logger.error("Error when updating parameter flow rules, id=" + id, ex.getCause());
             if (isNotSupported(ex.getCause())) {
                 return unsupportedVersion();
             } else {
                 return Result.ofThrowable(-1, ex.getCause());
             }
-        } catch (Throwable throwable) {
-            logger.error("Error when updating parameter flow rules, id=" + id, throwable);
-            return Result.ofFail(-1, throwable.getMessage());
         }
     }
 
@@ -242,35 +236,30 @@ public class ParamFlowRuleController {
 
         try {
             repository.delete(id);
-            publishRules(oldEntity.getApp(), oldEntity.getIp(), oldEntity.getPort()).get();
+            publishRules(oldEntity.getApp(), oldEntity.getIp(), oldEntity.getPort());
             return Result.ofSuccess(id);
-        } catch (ExecutionException ex) {
+        } catch (Throwable ex) {
             logger.error("Error when deleting parameter flow rules", ex.getCause());
             if (isNotSupported(ex.getCause())) {
                 return unsupportedVersion();
             } else {
                 return Result.ofThrowable(-1, ex.getCause());
             }
-        } catch (Throwable throwable) {
-            logger.error("Error when deleting parameter flow rules", throwable);
-            return Result.ofFail(-1, throwable.getMessage());
         }
     }
 
-    private CompletableFuture<Void> publishRules(String app, String ip, Integer port) {
+    private void publishRules(String app, String ip, Integer port) {
         List<ParamFlowRuleEntity> rules = repository.findAllByMachine(MachineInfo.of(app, ip, port));
         try {
             rulePublisher.publish(app, rules);
-            return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
             logger.error("Publish parameter flow rules failed", e);
-            return CompletableFuture.failedFuture(e);
         }
     }
 
     private <R> Result<R> unsupportedVersion() {
         return Result.ofFail(4041,
-            "Sentinel client not supported for parameter flow control (unsupported version or dependency absent)");
+                "Sentinel client not supported for parameter flow control (unsupported version or dependency absent)");
     }
 
     private final SentinelVersion version020 = new SentinelVersion().setMinorVersion(2);
