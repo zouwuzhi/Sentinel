@@ -35,6 +35,6 @@ public class InMemAuthorityRuleStore extends InMemoryRuleRepositoryAdapter<Autho
 
     @Override
     protected long nextId() {
-        return IdUtil.getSnowflakeNextId();
+        return ids.incrementAndGet();
     }
 }

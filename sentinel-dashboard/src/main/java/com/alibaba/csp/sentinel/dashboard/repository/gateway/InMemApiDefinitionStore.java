@@ -35,6 +35,6 @@ public class InMemApiDefinitionStore extends InMemoryRuleRepositoryAdapter<ApiDe
 
     @Override
     protected long nextId() {
-        return IdUtil.getSnowflakeNextId();
+        return ids.incrementAndGet();
     }
 }

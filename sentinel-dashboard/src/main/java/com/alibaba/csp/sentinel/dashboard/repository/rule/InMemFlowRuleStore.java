@@ -15,13 +15,11 @@
  */
 package com.alibaba.csp.sentinel.dashboard.repository.rule;
 
-import java.util.concurrent.atomic.AtomicLong;
-
-import cn.hutool.core.util.IdUtil;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.FlowRuleEntity;
 import com.alibaba.csp.sentinel.slots.block.flow.ClusterFlowConfig;
-
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Store {@link FlowRuleEntity} in memory.
@@ -35,7 +33,7 @@ public class InMemFlowRuleStore extends InMemoryRuleRepositoryAdapter<FlowRuleEn
 
     @Override
     protected long nextId() {
-        return IdUtil.getSnowflakeNextId();
+        return ids.incrementAndGet();
     }
 
     @Override

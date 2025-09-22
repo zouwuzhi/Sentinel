@@ -34,7 +34,7 @@ public class InMemParamFlowRuleStore extends InMemoryRuleRepositoryAdapter<Param
 
     @Override
     protected long nextId() {
-        return IdUtil.getSnowflakeNextId();
+        return ids.incrementAndGet();
     }
 
     @Override

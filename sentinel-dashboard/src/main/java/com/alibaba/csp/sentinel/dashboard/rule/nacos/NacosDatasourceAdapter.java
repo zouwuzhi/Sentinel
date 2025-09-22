@@ -7,6 +7,7 @@ import com.alibaba.csp.sentinel.dashboard.rule.DynamicRulePublisher;
 import com.alibaba.csp.sentinel.util.AssertUtil;
 import com.alibaba.csp.sentinel.util.StringUtil;
 import com.alibaba.nacos.api.config.ConfigService;
+import com.alibaba.nacos.api.config.ConfigType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +68,7 @@ public abstract class NacosDatasourceAdapter<T> implements DynamicRuleProvider<L
         }
         String dataId = getDataId(appName);
         String groupId = config.getGroupId();
-        configService.publishConfig(dataId, groupId, serialize(rules), "JSON");
+        configService.publishConfig(dataId, groupId, serialize(rules), ConfigType.JSON.getType());
     }
 
     protected List<T> deSerialize(String source, MachineInfo machine) {

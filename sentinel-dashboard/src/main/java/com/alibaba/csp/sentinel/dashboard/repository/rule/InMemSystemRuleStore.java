@@ -15,12 +15,10 @@
  */
 package com.alibaba.csp.sentinel.dashboard.repository.rule;
 
-import java.util.concurrent.atomic.AtomicLong;
-
-import cn.hutool.core.util.IdUtil;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.SystemRuleEntity;
-
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author leyou
@@ -32,6 +30,6 @@ public class InMemSystemRuleStore extends InMemoryRuleRepositoryAdapter<SystemRu
 
     @Override
     protected long nextId() {
-        return IdUtil.getSnowflakeNextId();
+        return ids.incrementAndGet();
     }
 }
